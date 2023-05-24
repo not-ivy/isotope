@@ -12,7 +12,7 @@ export default function RootLayout({ Component }: AppProps) {
           crossOrigin="anonymous"
         />
         <link
-          href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Flow+Circular&family=Instrument+Sans:wght@400;500;600;700&display=swap"
           rel="stylesheet"
         />
       </Head>

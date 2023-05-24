@@ -5,6 +5,7 @@ export default {
   theme: {
     fontFamily: {
       sans: ["Instrument Sans", "sans-serif"],
+      circ: ["Flow Circular", "sans-serif"],
     },
   },
 } as Options;
