@@ -46,5 +46,4 @@ Deno.test("flow", async (t) => {
 
   const messageEvent = new MessageEvent(gcmPair1, { message: "Hello, World!" });
   await messageEvent.init();
-  
 });

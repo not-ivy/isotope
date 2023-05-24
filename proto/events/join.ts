@@ -18,9 +18,9 @@ class JoinEvent extends BaseEvent {
   ecdsaRawPublicKey?: Uint8Array;
   ecdhRawPublicKey?: Uint8Array;
 
-  constructor(username: string) {
+  constructor(username?: string) {
     super(Magic.Join);
-    this.username = username;
+    this.username = username ?? "anonymous";
   }
 
   async init() {
