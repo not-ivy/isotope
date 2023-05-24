@@ -1,0 +1,10 @@
+{
+  "tasks": {
+    "test": "deno task test:events; deno task test:subtle",
+    "test:events": "deno test --coverage=coverage/events test/events.test.ts",
+    "test:subtle": "deno test --coverage=coverage/subtle test/subtle.test.ts",
+    "coverage": "deno task coverage:events; deno task coverage:subtle",
+    "coverage:events": "deno coverage coverage/events",
+    "coverage:subtle": "deno coverage coverage/subtle"
+  }
+}
