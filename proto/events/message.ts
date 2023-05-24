@@ -9,6 +9,11 @@ export type MessageContent = {
   attachment?: Uint8Array[];
 };
 
+export type MessageEventPayload = {
+  ciphertext: Uint8Array;
+  iv: Uint8Array;
+};
+
 class MessageEvent extends BaseEvent {
   rawContent: Uint8Array;
   gcmKey: CryptoKey;
@@ -34,8 +39,14 @@ class MessageEvent extends BaseEvent {
     this.iv = iv;
   }
 
-  into(): Uint8Array {
-    throw new Error("Method not implemented.");
+  into() {
+    return new Uint8Array([
+      this.magic,
+      ...cbor.encode({
+        ciphertext: this.ciphertext,
+        iv: this.iv,
+      }),
+    ]);
   }
 
   get decodedContent(): MessageContent {

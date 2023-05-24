@@ -1,7 +1,4 @@
-import {
-  assert,
-  assertEquals,
-} from "https://deno.land/std@0.188.0/testing/asserts.ts";
+import { assertEquals } from "https://deno.land/std@0.188.0/testing/asserts.ts";
 import JoinEvent from "../events/join.ts";
 import AcceptedEvent from "../events/accepted.ts";
 import MessageEvent from "../events/message.ts";
