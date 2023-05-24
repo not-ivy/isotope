@@ -11,14 +11,16 @@ export type JoinEventPayload = {
 };
 
 class JoinEvent extends BaseEvent {
+  username: string;
   signature?: Uint8Array;
   ecdsaPair?: CryptoKeyPair;
   ecdhPair?: CryptoKeyPair;
   ecdsaRawPublicKey?: Uint8Array;
   ecdhRawPublicKey?: Uint8Array;
 
-  constructor() {
+  constructor(username: string) {
     super(Magic.Join);
+    this.username = username;
   }
 
   async init() {
