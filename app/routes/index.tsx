@@ -2,7 +2,6 @@ import { Head } from "$fresh/runtime.ts";
 import IconChartBubbleFilled from "tabler-icons/chart-bubble-filled.tsx";
 import IconArrowUpRight from "tabler-icons/arrow-up-right.tsx";
 import IconLoader2 from "tabler-icons/loader-2.tsx";
-import IconLockSquareRounded from "tabler-icons/lock-square-rounded.tsx";
 
 export default function Home() {
   return (
