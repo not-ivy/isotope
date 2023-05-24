@@ -1,20 +1,21 @@
 {
-	"folders": [
-		{
-			"path": "app"
-		},
-		{
-			"path": "proto"
-		},
-		{
-			"path": "presentation"
-		}
-	],
-	"settings": {
-		"deno.unstable": true,
-		"deno.lint": true,
-		"[typescript]": {
-			"editor.defaultFormatter": "denoland.vscode-deno"
-		},
-	}
+  "folders": [
+    {
+      "path": "app"
+    },
+    {
+      "path": "proto"
+    },
+    {
+      "path": "presentation"
+    }
+  ],
+  "settings": {
+    "deno.enable": true,
+    "deno.unstable": true,
+    "deno.lint": true,
+    "[typescript]": {
+      "editor.defaultFormatter": "denoland.vscode-deno"
+    }
+  }
 }
