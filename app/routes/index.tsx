@@ -7,6 +7,7 @@ export default function Home() {
   return (
     <>
       <Head>
+        <title>Isotope Chat</title>
       </Head>
       <main class="p-8 min-h-screen flex justify-between gap-x-32">
         <div class="w-full">
@@ -22,7 +23,7 @@ export default function Home() {
             </div>
             <hr class="border-none h-8" />
             <div class="flex items-center gap-x-8">
-              <a href="/signup" class="w-min block">
+              <a href="/rooms" class="w-min block">
                 <span class="flex w-min items-center px-5 py-3 rounded-full text-white bg-green-400 gap-x-2 shadow-lg hover:bg-green-300 transition-colors active:bg-green-500">
                   <span class="font-bold whitespace-nowrap">
                     Start Chatting
@@ -30,7 +31,7 @@ export default function Home() {
                   <IconArrowUpRight class="inline ml-3" />
                 </span>
               </a>
-              <a href="/signup" class="w-min block">
+              <a href="#" class="w-min block">
                 <span class="flex w-min items-center px-5 py-3 rounded-full text-white bg-purple-500 gap-x-2 shadow-lg hover:bg-purple-400 transition-colors active:bg-purple-600">
                   <span class="font-bold whitespace-nowrap">Learn More</span>
                   <IconArrowUpRight class="inline ml-3" />

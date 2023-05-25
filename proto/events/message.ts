@@ -12,6 +12,8 @@ export type MessageContent = {
 export type MessageEventPayload = {
   ciphertext: Uint8Array;
   iv: Uint8Array;
+  to: Uint8Array;
+  timestamp: number;
 };
 
 class MessageEvent extends BaseEvent {

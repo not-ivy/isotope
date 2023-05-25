@@ -1,10 +1,12 @@
 import * as cbor from "https://esm.sh/cbor-x@1.5.3";
+import { uid } from "https://esm.sh/uid@2.0.2";
 
 import BaseEvent from "./base.ts";
 import Magic from "../types/magic.ts";
 import * as subtleUtils from "../utils/subtle.ts";
 
 export type JoinEventPayload = {
+  username: string;
   ecdsaPublicKey: Uint8Array;
   ecdhPublicKey: Uint8Array;
   signature: Uint8Array;
@@ -20,7 +22,7 @@ class JoinEvent extends BaseEvent {
 
   constructor(username?: string) {
     super(Magic.Join);
-    this.username = username ?? "anonymous";
+    this.username = username ?? `guest-${uid(6)}`;
   }
 
   async init() {
@@ -48,6 +50,7 @@ class JoinEvent extends BaseEvent {
     return new Uint8Array([
       this.magic,
       ...cbor.encode({
+        username: this.username,
         ecdsaPublicKey: this.ecdsaRawPublicKey,
         ecdhPublicKey: this.ecdhRawPublicKey,
         signature: this.signature,

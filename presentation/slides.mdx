@@ -63,6 +63,14 @@ key. The user can also choose their own username.
 
 ### Accepted Event
 
+```typescript
+export type AcceptedEventPayload = {
+  ecdsaPublicKey: Uint8Array;
+  participants: Participant[];
+  signature: Uint8Array;
+};
+```
+
 <Notes>
 
 In the Accepted event, the creator of the group along with all the trusted users
