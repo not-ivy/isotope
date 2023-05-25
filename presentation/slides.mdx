@@ -1,0 +1,206 @@
+import { Notes } from 'mdx-deck';
+
+# Project Isotope
+
+---
+
+## Changes from the original paper
+
+### Announce Event
+
+- Removed the Rotation event.
+- Announced by the creator of a group or a trusted participant.
+
+### Independent
+
+- No longer requires metamask.
+- Uses WebCrypto API.
+
+<Notes>
+
+The first thing that is different from the original paper is that the rotation
+event was removed, and the announce event was added. The announce event does
+more than just replaces the rotation event. It is sent by the creator of a group
+or a trusted participant in the group. It can contain adifferent of four types:
+userJoin, userKick, keyRotation, groupTerminate. The announce event is sent to
+all participants in the group. I will explain these four different types in the
+next slide.
+
+The next different thing is that this protocol no longer requires metamask in
+order to function. The whole protocol now utilizes the WebCrypto API, which has
+been made available in all major browsers and javascript runtime under a secure
+context(HTTPS).
+
+</Notes>
+
+---
+
+# Flow
+
+### Join Event
+
+```typescript
+type JoinEventPayload = {
+  username: string;
+  ecdsaPublicKey: Uint8Array;
+  ecdhPublicKey: Uint8Array;
+  signature: Uint8Array;
+};
+```
+
+<Notes>
+
+The Join event creates a new ECDSA and ECDH key pair. Then, the ECDH public key
+is exported and signed with the ECDSA private key. The signature is then sent to
+the the creator of the group along with the ECDSA public key and the ECDH public
+key. The user can also choose their own username.
+
+</Notes>
+
+---
+
+# Flow
+
+### Accepted Event
+
+<Notes>
+
+In the Accepted event, the creator of the group along with all the trusted users
+verifies the signature in the Join event. When the verification succeeds, the
+creator will reply an Accepted event, sending a list of participants to the user
+that wants to join the group, and then adding the user to the list of existing
+participants. The user will then calculate the shared key with all the existing
+participants in the group. When the verification fails, the creator will reply a
+Terminate event with the reason "signature not verified", and the user will not
+be able to join the group.
+
+</Notes>
+
+---
+
+# Flow
+
+### Announce Event
+
+```typescript
+type AnnounceType =
+  | "userJoin"
+  | "userStatus"
+  | "userKick"
+  | "groupTerminate";
+```
+
+<Notes>
+
+After the creator of the group has verified the signature, the creator will send
+an Announce event with the type userJoin to all the participants in the group,
+and everyone in the group will add the user to the list of existing
+participants, and then calculate the shared key with the new user. Remember in
+the previous slide that trusted users also have to verify the signature? After
+the Join event, the trusted users will also send a announce event with the type
+userStatus to tell everyone if the signature is valid or not. Note that the
+creator of the group holds the final say on whether the signature's validity. If
+the signature is invalid, the creator will simply does not announce the user to
+the group, and send a termination event with the reason "signature not
+verified". A key exchange will not be performed, and the user will not be able
+to decrypt messages that are sent to the group.
+
+</Notes>
+
+---
+
+# Flow
+
+### Beat
+
+```typescript
+type BeatEventPayload = {
+  timestamp: number;
+  to: Uint8Array; // ecdsa public key
+};
+```
+
+<Notes>
+
+The Beat event is sent by the creator of the group as as well as the trusted
+users to all the participants in the group. The purpose of the Beat event is to
+make sure that all the participants are still online. If a participant does not
+also reply with a Beat event for a certain amount of time, the participant will
+be removed from the list of existing participants, and an Announce event with
+the type userKick will be sent to all the participants in the group. When that
+event is recieved by the participants, they will remove the user from the list
+of existing participants, and the shared key with that user is discarded. Since
+every participant in the group have a shared key with every other participant,
+there will be no need to rotate the keys when a participant leaves the group.
+
+However, if the creator of the group is considered to be offline(which is
+verified by all trusted users), the group will be abandoned, and all the
+participants will discard the shared key with every other participant in the
+group.
+
+</Notes>
+
+---
+
+# Flow
+
+### Message
+
+```typescript
+export type MessageContent = {
+  message: string;
+  attachment?: Uint8Array[];
+};
+
+export type MessageEventPayload = {
+  ciphertext: Uint8Array; // cbor-encoded and encrypted MessageContent
+  iv: Uint8Array;
+  to: Uint8Array;
+  timestamp: number;
+};
+```
+
+<Notes>
+
+The Message event is sent by a participant to all the other participants in the
+group. The message is encrypted with AES-GCM, which is derived from the shared
+secret during the ECDH key exchange. The message may also contain attachments.
+
+</Notes>
+
+---
+
+# Flow
+
+### Terminate Event
+
+```typescript
+type TerminateEventPayload = {
+  reason: string;
+};
+```
+
+<Notes>
+
+The terminate event can be sent by any participant in the group. When it is sent
+by a participant with the reason "leave", the participant will be removed from
+every participant's list, and the shared key with that participant is discarded.
+
+</Notes>
+
+---
+
+# Permission Table
+
+| Event Type | Creator | Trusted User | Participant |
+| ---------- | ------- | ------------ | ----------- |
+| Join       | ✓       | ✓            | ✓           |
+| Accepted   | ✓       | ✗            | ✗           |
+| Announce   | ✓       | ✓            | ✗           |
+| Beat       | ✓       | ✓            | ✓           |
+| Message    | ✓       | ✓            | ✓           |
+| Terminate  | ✓       | ✓            | ✓           |
+
+---
+
+# Questions?
