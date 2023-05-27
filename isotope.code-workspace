@@ -8,6 +8,9 @@
     },
     {
       "path": "presentation"
+    },
+    {
+      "path": "server"
     }
   ],
   "settings": {
