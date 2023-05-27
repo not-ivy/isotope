@@ -2,18 +2,31 @@ import "https://deno.land/x/dotenv@v3.2.2/load.ts";
 
 import Topic from "../src/topic.ts";
 import { serve } from "https://deno.land/std@0.187.0/http/server.ts";
-// import cheetah from "https://deno.land/x/cheetah@v0.7.2/mod.ts";
 
 const topics = new Map<string, Topic>();
 
 const urlRegex = /^(http|https):\/\/([^/]+)\/(\w+)$/;
 
 serve((req) => {
-  if (req.headers.get("upgrade") != "websocket") {
-    return new Response(null, { status: 501 });
-  }
-
   const [_url, _protocol, _domain, roomId] = req.url.match(urlRegex) || [];
+
+  if (req.headers.get("upgrade") != "websocket") {
+    if (!roomId) {
+      return new Response(
+        JSON.stringify(
+          Object.keys(topics).map((t) => ({
+            topic: t,
+            createdAt: topics.get(t)?.createdAt,
+            subscribers: topics.get(t)?.subscriberSize,
+          })),
+        ),
+        {
+          headers: { "content-type": "application/json" },
+        },
+      );
+    }
+    return new Response(null, { status: 404 });
+  }
 
   if (!roomId) return new Response(null, { status: 400 });
 
@@ -33,4 +46,4 @@ serve((req) => {
   topic.addSubscriber(socket);
 
   return response;
-});
+}, { port: parseInt(Deno.env.get("PORT") || "8080") });

@@ -7,6 +7,7 @@ export type TopicMessage = {
 };
 
 class Topic {
+  createdAt = new Date();
   socket: WebSocket;
   topic: string;
   #subscribers: Set<WebSocket> = new Set();
@@ -43,6 +44,10 @@ class Topic {
       this.#subscribers.delete(socket);
       console.log("a user left");
     });
+  }
+
+  get subscriberSize() {
+    return this.#subscribers.size;
   }
 
   toJSON() {
